@@ -17,6 +17,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\UserAccountController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\CatalogueController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -100,3 +101,7 @@ Route::prefix('customer')->name('customer.')->group(function () {
 });
 
 Route::resource('cpus', CpuController::class);
+
+// catalogue routes
+Route::get('/catalogue', [CatalogueController::class, 'index'])->name('catalogue');
+
