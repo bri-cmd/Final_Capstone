@@ -143,7 +143,18 @@
         <!-- Product Grid -->
         <main class="w-3/4 p-6 grid grid-cols-4 gap-6">
             @forelse($products as $product)
-                <div class="relative border rounded-lg p-4 text-center bg-blue-50 shadow hover:shadow-lg transition flex flex-col justify-between h-[320px]">
+                <div x-data="{ openModal: false }" class="relative border rounded-lg p-4 text-center bg-blue-50 shadow hover:shadow-lg transition flex flex-col justify-between h-[320px]">
+                     <!-- Three-dot menu button -->
+                    <button @click="openModal = true"
+                            class="absolute top-2 right-2 p-2 rounded-full bg-white shadow hover:bg-gray-100">
+                        <svg xmlns="http://www.w3.org/2000/svg" 
+                            fill="currentColor" 
+                            viewBox="0 0 16 16" 
+                            class="w-5 h-5 text-gray-700">
+                            <path d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3zm5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/>
+                        </svg>
+                    </button>
+                    
                     <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/placeholder.png') }}" 
                          class="mx-auto mb-3 h-32 object-contain">
 
@@ -169,6 +180,25 @@
                             Add to Cart
                         </button>
                     </form>
+                    <template x-if="openModal">
+            <div class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                <div class="bg-white rounded-xl shadow-lg p-6 w-96 relative">
+                    <button @click="openModal = false"
+                            class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">✕</button>
+
+                    <h2 class="text-lg font-bold mb-2">Component Specs</h2>
+                    <hr class="mb-4">
+
+                    <p><strong>Component:</strong> {{ $product->name }}</p>
+                    <p><strong>Category:</strong> {{ $product->category }}</p>
+                    <p><strong>Cores/Threads:</strong> {{ $product->cores_threads }}</p>
+                    <p><strong>Base Clock:</strong> {{ $product->base_clock }}</p>
+                    <p><strong>Socket:</strong> {{ $product->socket }}</p>
+                    <p><strong>Price:</strong> ₱{{ number_format($product->price, 0) }}</p>
+                    <p><strong>Stock:</strong> Available ({{ $product->stock }} units)</p>
+                </div>
+            </div>
+        </template>
                 </div>
             @empty
                 <p class="col-span-4 text-center text-gray-500">No products available.</p>

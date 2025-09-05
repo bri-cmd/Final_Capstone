@@ -121,26 +121,28 @@
                 </div>
 
                <!-- Cart Summary BELOW the table -->
-                    <div class="rounded-xl p-5 w-full md:w-2/3 lg:w-1/2">
-                        <div class="mb-4">
-                            <p class="text-lg font-bold text-gray-800">Cart Summary</p>
-                        </div>
+                <div class="rounded-xl p-5 w-full md:w-2/3 lg:w-1/2">
+                    <div class="mb-4">
+                        <p class="text-lg font-bold text-gray-800">Cart Summary</p>
+                    </div>
 
-                        <!-- Horizontal row: Select All + Total + Checkout -->
-                        <div class="flex items-center gap-6">
-                            <!-- Left: Select All -->
-                            <label class="flex items-center gap-2">
-                                <input type="checkbox" id="select-all" class="w-4 h-4 text-blue-600 rounded border-gray-300">
-                                <span class="text-sm text-gray-700">Select All</span>
-                            </label>
+                    <!-- Horizontal row: Select All + Total + Checkout -->
+                    <div class="flex items-center gap-6">
+                        <!-- Left: Select All -->
+                        <label class="flex items-center gap-2">
+                            <input type="checkbox" id="select-all" class="w-4 h-4 text-blue-600 rounded border-gray-300">
+                            <span class="text-sm text-gray-700">Select All</span>
+                        </label>
 
-                            <!-- Middle: Total Selected -->
-                            <p class="text-sm text-gray-700 flex items-center">
-                                Total:
-                                <span id="cart-summary-total" class="text-lg font-extrabold text-gray-600 ml-2">₱0.00</span>
-                            </p>
+                        <!-- Middle: Total Selected -->
+                        <p class="text-sm text-gray-700 flex items-center">
+                            Total:
+                            <span id="cart-summary-total" class="text-lg font-extrabold text-gray-600 ml-2">₱0.00</span>
+                        </p>
 
-                            <!-- Right: Checkout -->
+                        <!-- Right: Checkout -->
+                        @auth
+                            <!-- If logged in → normal checkout -->
                             <form id="checkout-form" action="{{ route('cart.checkout') }}" method="GET">
                                 <input type="hidden" name="selected_items" id="selected-items">
                                 <button type="submit"
@@ -148,9 +150,18 @@
                                     Checkout
                                 </button>
                             </form>
+                        @endauth
 
-                        </div>
+                        @guest
+                            <!-- If not logged in → send to login -->
+                            <a href="{{ route('login') }}"
+                               class="bg-pink-400 hover:bg-blue-700 text-white px-5 py-2 rounded-lg font-semibold transition">
+                               Checkout
+                            </a>
+                        @endguest
+
                     </div>
+                </div>
 
 
             @else
@@ -204,31 +215,30 @@
     checkboxes.forEach(cb => cb.addEventListener('change', updateTotal));
 
     const checkoutForm = document.getElementById('checkout-form');
-const selectedItemsInput = document.getElementById('selected-items');
+    const selectedItemsInput = document.getElementById('selected-items');
 
-checkoutForm.addEventListener('submit', (e) => {
-    const selectedIds = [];
+    checkoutForm?.addEventListener('submit', (e) => {
+        const selectedIds = [];
 
-    checkboxes.forEach((cb, index) => {
-        if (cb.checked) {
-            // match checkbox index with cart item key
-            const itemId = Object.keys(@json($cart))[index]; 
-            selectedIds.push(itemId);
+        checkboxes.forEach((cb, index) => {
+            if (cb.checked) {
+                // match checkbox index with cart item key
+                const itemId = Object.keys(@json($cart))[index]; 
+                selectedIds.push(itemId);
+            }
+        });
+
+        if (selectedIds.length === 0) {
+            e.preventDefault();
+            alert("Please select at least one item before checkout.");
+            return;
         }
+
+        // Put IDs into hidden input
+        selectedItemsInput.value = JSON.stringify(selectedIds);
     });
 
-    if (selectedIds.length === 0) {
-        e.preventDefault();
-        alert("Please select at least one item before checkout.");
-        return;
-    }
-
-    // Put IDs into hidden input
-    selectedItemsInput.value = JSON.stringify(selectedIds);
-});
-
-</script>
-
+    </script>
 
 </body>
 </html>
