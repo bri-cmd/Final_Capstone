@@ -19,6 +19,7 @@ use App\Http\Controllers\UserAccountController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CatalogueController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -106,8 +107,10 @@ Route::resource('cpus', CpuController::class);
 // catalogue routes
 Route::get('/catalogue', [CatalogueController::class, 'index'])->name('catalogue');
 
-Route::get('/cart', [CartController::class, 'index'])->name('cart');
+Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
 Route::patch('/cart/{id}', [CartController::class, 'update'])->name('cart.update');
 Route::delete('/cart/{id}', [CartController::class, 'remove'])->name('cart.remove');
 Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
 Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
+
+Route::post('/checkout/process', [CheckoutController::class, 'process'])->name('checkout.process');
