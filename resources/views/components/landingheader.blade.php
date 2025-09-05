@@ -6,7 +6,7 @@
     <div class="header-nav">
         <div class="header-link">
             <a href="">Your Builds</a>
-            <a href="">Cart</a>
+            <a href="{{ route('cart') }}">Cart</a>
             <a href="{{ route('catalogue') }}">Products</a>
         </div>
         <div class="header-button">

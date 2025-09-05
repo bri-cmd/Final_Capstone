@@ -162,7 +162,7 @@
 
                     <p class="text-gray-800 font-semibold">₱{{ number_format($product->price, 0) }}</p>
 
-                    <form action="" method="POST" class="mt-auto">
+                    <form action="{{ route('cart.add') }}" method="POST" class="mt-auto">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
                         <button type="submit" class="w-full py-2 bg-white border rounded-md font-semibold text-gray-700 shadow hover:bg-gray-100">
